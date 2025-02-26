@@ -17,8 +17,17 @@ type TokenResponse struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-// TokenHandler handles the /token endpoint.
-// It validates client credentials using Basic Authentication, then issues a JWT token.
+// TokenHandler godoc
+// @Summary      Generate JWT Token
+// @Description  Validates client credentials and returns a JWT token
+// @Tags         token
+// @Accept       json
+// @Produce      json
+// @Security     BasicAuth
+// @Success      200  {object}  handlers.TokenResponse
+// @Failure      401  {string}  string "Unauthorized"
+// @Failure      500  {string}  string "Error generating token"
+// @Router       /token [get]
 func TokenHandler(w http.ResponseWriter, r *http.Request) {
 	userName, ok := auth.ValidateBasicAuth(r)
 	if !ok {
