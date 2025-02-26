@@ -16,6 +16,15 @@ type IntrospectionResponse struct {
 	Role      string `json:"role,omitempty"`
 }
 
+// IntrospectionHandler godoc
+// @Summary      Introspect JWT Token
+// @Description  Validates a JWT token provided as a query parameter and returns its introspection result including active status and token claims.
+// @Tags         introspection
+// @Produce      json
+// @Param        token   query     string  true  "JWT token to introspect"
+// @Success      200     {object}  handlers.IntrospectionResponse "Token introspection result"
+// @Failure      400     {string}  string "Missing token parameter"
+// @Router       /introspection [get]
 func IntrospectionHandler(w http.ResponseWriter, r *http.Request) {
 	tokenStr := r.URL.Query().Get("token")
 	if tokenStr == "" {

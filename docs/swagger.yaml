@@ -1,0 +1,111 @@
+basePath: /
+definitions:
+  handlers.IntrospectionResponse:
+    properties:
+      active:
+        type: boolean
+      exp:
+        type: integer
+      iat:
+        type: integer
+      iss:
+        type: string
+      role:
+        type: string
+      sub:
+        type: string
+    type: object
+  handlers.TokenResponse:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: integer
+      token_type:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: p.saha@reply.de
+    name: Pratik Saha
+  description: This is an OAuth2 server that issues JWT access tokens.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: OAuth2 Server API
+  version: "1.0"
+paths:
+  /introspection:
+    get:
+      description: Validates a JWT token provided as a query parameter and returns
+        its introspection result including active status and token claims.
+      parameters:
+      - description: JWT token to introspect
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Token introspection result
+          schema:
+            $ref: '#/definitions/handlers.IntrospectionResponse'
+        "400":
+          description: Missing token parameter
+          schema:
+            type: string
+      summary: Introspect JWT Token
+      tags:
+      - introspection
+  /keys:
+    get:
+      description: Returns the RSA public signing keys in JWK format, which can be
+        used to verify JWT signatures.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Error getting keys" or "Error encoding keys
+          schema:
+            type: string
+      summary: Retrieve Public Signing Keys
+      tags:
+      - keys
+  /token:
+    get:
+      consumes:
+      - application/json
+      description: Validates client credentials and returns a JWT token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.TokenResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Error generating token
+          schema:
+            type: string
+      security:
+      - BasicAuth: []
+      summary: Generate JWT Token
+      tags:
+      - token
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"
