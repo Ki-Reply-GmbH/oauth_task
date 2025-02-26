@@ -94,8 +94,12 @@ func TestValidateBasicAuth_Valid(t *testing.T) {
 	encoded := base64.StdEncoding.EncodeToString([]byte(credentials))
 	req.Header.Set("Authorization", "Basic "+encoded)
 
-	if !ValidateBasicAuth(req) {
+	username, ok := ValidateBasicAuth(req)
+	if !ok {
 		t.Error("Expected ValidateBasicAuth to return true for valid credentials, but it returned false")
+	}
+	if username != "testuser" {
+		t.Errorf("Expected returned username to be 'testuser', got '%s'", username)
 	}
 }
 
@@ -108,8 +112,8 @@ func TestValidateBasicAuth_InvalidPassword(t *testing.T) {
 	credentials := "testuser:wrongpassword"
 	encoded := base64.StdEncoding.EncodeToString([]byte(credentials))
 	req.Header.Set("Authorization", "Basic "+encoded)
-
-	if ValidateBasicAuth(req) {
+	_, ok := ValidateBasicAuth(req)
+	if ok {
 		t.Error("Expected ValidateBasicAuth to return false for wrong password, but it returned true")
 	}
 }
@@ -124,7 +128,8 @@ func TestValidateBasicAuth_InvalidUser(t *testing.T) {
 	encoded := base64.StdEncoding.EncodeToString([]byte(credentials))
 	req.Header.Set("Authorization", "Basic "+encoded)
 
-	if ValidateBasicAuth(req) {
+	_, ok := ValidateBasicAuth(req)
+	if ok {
 		t.Error("Expected ValidateBasicAuth to return false for unknown user, but it returned true")
 	}
 }

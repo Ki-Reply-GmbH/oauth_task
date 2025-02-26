@@ -29,18 +29,21 @@ func ExtractBasicAuthCredentials(r *http.Request) (string, string, bool) {
 }
 
 // checks if the provided credentials are valid.
-func ValidateBasicAuth(r *http.Request) bool {
+func ValidateBasicAuth(r *http.Request) (string, bool) {
 	providedUserName, providedUserPass, ok := ExtractBasicAuthCredentials(r)
 	if !ok {
-		return false
+		return "", false
 	}
 
 	expecteduserpassword, err := LookupClientSecret(providedUserName)
 	if err != nil {
-		return false
+		return "", false
+	}
+	if providedUserPass != expecteduserpassword {
+		return "", false
 	}
 
-	return providedUserPass == expecteduserpassword
+	return providedUserName, true
 }
 
 // lookup in db for the password with provided username and return it.
