@@ -20,6 +20,7 @@ func main() {
 	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/token", handlers.TokenHandler)
 	http.HandleFunc("/keys", handlers.KeysHandler)
+	http.HandleFunc("/introspection", handlers.IntrospectionHandler)
 
 	fmt.Println("Server is running on http://localhost:8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
