@@ -11,7 +11,7 @@
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 //
-// @host      localhost:80
+// @host      localhost:30080
 // @BasePath  /
 //
 // @securityDefinitions.basic BasicAuth
