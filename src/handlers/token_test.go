@@ -6,8 +6,10 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
+	"oauth-basic/src/auth"
 	"oauth-basic/src/keys"
 )
 
@@ -21,7 +23,12 @@ func TestTokenHandler_ValidCredentials(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	cred := "testuser:testpassword"
+	os.Setenv("CLIENT_ID", "testuser")
+	os.Setenv("CLIENT_SECRET", "testpassword")
+	defer os.Unsetenv("CLIENT_ID")
+	defer os.Unsetenv("CLIENT_SECRET")
+	clientID, clientSecret := auth.LoadClientCredentialFromEnv()
+	cred := clientID + ":" + clientSecret
 	encodedCred := base64.StdEncoding.EncodeToString([]byte(cred))
 	req.Header.Set("Authorization", "Basic "+encodedCred)
 

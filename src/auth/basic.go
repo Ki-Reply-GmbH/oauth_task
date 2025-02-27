@@ -4,6 +4,8 @@ import (
 	"encoding/base64"
 	"errors"
 	"net/http"
+	. "oauth-basic/src/utils"
+	"os"
 	"strings"
 )
 
@@ -17,12 +19,14 @@ func ExtractBasicAuthCredentials(r *http.Request) (string, string, bool) {
 	encodedCredentials := strings.TrimPrefix(authHeader, "Basic ")
 	decodedBytes, err := base64.StdEncoding.DecodeString(encodedCredentials)
 	if err != nil {
+		Logger.Printf("Failed to decode base64: %v", err)
 		return "", "", false
 	}
 	credentials := string(decodedBytes)
 
 	parts := strings.SplitN(credentials, ":", 2)
 	if len(parts) != 2 {
+		Logger.Println("Invalid credentials format")
 		return "", "", false
 	}
 	return parts[0], parts[1], true
@@ -30,28 +34,37 @@ func ExtractBasicAuthCredentials(r *http.Request) (string, string, bool) {
 
 // checks if the provided credentials are valid.
 func ValidateBasicAuth(r *http.Request) (string, bool) {
-	providedUserName, providedUserPass, ok := ExtractBasicAuthCredentials(r)
+	providedclientID, providedClientSecret, ok := ExtractBasicAuthCredentials(r)
 	if !ok {
 		return "", false
 	}
 
-	expecteduserpassword, err := LookupClientSecret(providedUserName)
+	expectedClientSecret, err := LookupClientSecret(providedclientID)
 	if err != nil {
 		return "", false
 	}
-	if providedUserPass != expecteduserpassword {
+	if providedClientSecret != expectedClientSecret {
 		return "", false
 	}
 
-	return providedUserName, true
+	return providedclientID, true
 }
 
 // lookup in db for the password with provided username and return it.
-func LookupClientSecret(userName string) (string, error) {
-	// For demonstration, we assume that the client with "testuser" has the password "testpassword".
-	// This would be a db operation but for now we just do hard coded check
-	if userName == "testuser" {
-		return "testpassword", nil
+func LookupClientSecret(clientID string) (string, error) {
+	// For demonstration, we assume that the client with "testid" has the password "testsecret".
+	// This would be a db operation but for now we just check from environment variables.
+
+	clientIDFromEnv, clientSecretFromEnv := LoadClientCredentialFromEnv()
+	if clientID == clientIDFromEnv {
+		return clientSecretFromEnv, nil
 	}
+	Logger.Printf("Client not found: %s", clientID)
 	return "", errors.New("client not found")
+}
+
+func LoadClientCredentialFromEnv() (string, string) {
+	clientIDFromEnv := os.Getenv("CLIENT_ID")
+	clientSecretFromEnv := os.Getenv("CLIENT_SECRET")
+	return clientIDFromEnv, clientSecretFromEnv
 }
