@@ -26,6 +26,7 @@ import (
 	"oauth-basic/src/config"
 	"oauth-basic/src/handlers"
 	"oauth-basic/src/keys"
+	. "oauth-basic/src/utils"
 
 	httpSwagger "github.com/swaggo/http-swagger"
 )

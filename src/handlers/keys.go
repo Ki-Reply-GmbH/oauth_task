@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"oauth-basic/src/keys"
+	. "oauth-basic/src/utils"
 )
 
 // KeysHandler godoc
@@ -19,13 +19,13 @@ import (
 func KeysHandler(w http.ResponseWriter, r *http.Request) {
 	jwk, err := keys.GetJWK()
 	if err != nil {
-		log.Printf("Error getting JWK: %v", err)
+		Logger.Println("Error getting JWK: %v", err)
 		http.Error(w, "Error getting keys", http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(jwk); err != nil {
-		log.Printf("Error encoding JWK: %v", err)
+		Logger.Printf("Error encoding JWK: %v", err)
 		http.Error(w, "Error encoding keys", http.StatusInternalServerError)
 		return
 	}

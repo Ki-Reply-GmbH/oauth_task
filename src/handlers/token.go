@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"oauth-basic/src/auth"
 	"oauth-basic/src/jwt"
 	"oauth-basic/src/keys"
+	. "oauth-basic/src/utils"
 	"time"
 )
 
@@ -49,7 +49,7 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := claims.ValidateRole(); err != nil {
-		log.Printf("Invalid claims: %v", err)
+		Logger.Printf("Invalid claims: %v", err)
 		http.Error(w, "Invalid token claims", http.StatusInternalServerError)
 		return
 	}

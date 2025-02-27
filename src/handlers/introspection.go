@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"oauth-basic/src/jwt"
 	"oauth-basic/src/keys"
+	. "oauth-basic/src/utils"
 )
 
 type IntrospectionResponse struct {
@@ -28,6 +29,7 @@ type IntrospectionResponse struct {
 func IntrospectionHandler(w http.ResponseWriter, r *http.Request) {
 	tokenStr := r.URL.Query().Get("token")
 	if tokenStr == "" {
+		Logger.Println("Missing token parameter")
 		http.Error(w, "Missing token parameter", http.StatusBadRequest)
 		return
 	}
@@ -38,6 +40,8 @@ func IntrospectionHandler(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(response)
 		return
+	} else {
+		Logger.Printf("Token claims error: %+v", err)
 	}
 
 	// Optional: further validation such as checking expiration could be added here.

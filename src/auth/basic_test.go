@@ -3,6 +3,7 @@ package auth
 import (
 	"encoding/base64"
 	"net/http"
+	"os"
 	"testing"
 )
 
@@ -13,7 +14,12 @@ func TestExtractBasicAuthCredentials_Valid(t *testing.T) {
 		t.Fatalf("Failed to create request: %v", err)
 	}
 
-	credentials := "testuser:testpassword"
+	os.Setenv("CLIENT_ID", "testuser")
+	os.Setenv("CLIENT_SECRET", "testpassword")
+	defer os.Unsetenv("CLIENT_ID")
+	defer os.Unsetenv("CLIENT_SECRET")
+	clientID, clientSecret := LoadClientCredentialFromEnv()
+	credentials := clientID + ":" + clientSecret
 	encoded := base64.StdEncoding.EncodeToString([]byte(credentials))
 	req.Header.Set("Authorization", "Basic "+encoded)
 
@@ -21,10 +27,10 @@ func TestExtractBasicAuthCredentials_Valid(t *testing.T) {
 	if !ok {
 		t.Error("Expected credentials extraction to succeed but it failed")
 	}
-	if client != "testid" {
+	if client != clientID {
 		t.Errorf("Expected clientId 'testid', got '%s'", client)
 	}
-	if secret != "testsecret" {
+	if secret != clientSecret {
 		t.Errorf("Expected password 'testsecret', got '%s'", secret)
 	}
 }
@@ -90,7 +96,12 @@ func TestValidateBasicAuth_Valid(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-	credentials := "testid:testsecret"
+	os.Setenv("CLIENT_ID", "testuser")
+	os.Setenv("CLIENT_SECRET", "testpassword")
+	defer os.Unsetenv("CLIENT_ID")
+	defer os.Unsetenv("CLIENT_SECRET")
+	clientID, clientSecret := LoadClientCredentialFromEnv()
+	credentials := clientID + ":" + clientSecret
 	encoded := base64.StdEncoding.EncodeToString([]byte(credentials))
 	req.Header.Set("Authorization", "Basic "+encoded)
 
@@ -98,7 +109,7 @@ func TestValidateBasicAuth_Valid(t *testing.T) {
 	if !ok {
 		t.Error("Expected ValidateBasicAuth to return true for valid credentials, but it returned false")
 	}
-	if clientId != "testid" {
+	if clientId != clientID {
 		t.Errorf("Expected returned clientID to be 'testid', got '%s'", clientId)
 	}
 }
@@ -131,5 +142,28 @@ func TestValidateBasicAuth_InvalidUser(t *testing.T) {
 	_, ok := ValidateBasicAuth(req)
 	if ok {
 		t.Error("Expected ValidateBasicAuth to return false for unknown client, but it returned true")
+	}
+}
+func TestLoadClientCredentialFromEnv(t *testing.T) {
+	// Define expected values.
+	expectedClientID := "test_client"
+	expectedClientSecret := "test_secret"
+
+	// Set the environment variables.
+	os.Setenv("CLIENT_ID", expectedClientID)
+	os.Setenv("CLIENT_SECRET", expectedClientSecret)
+	// Defer cleanup of the environment variables.
+	defer os.Unsetenv("CLIENT_ID")
+	defer os.Unsetenv("CLIENT_SECRET")
+
+	// Call the function.
+	clientID, clientSecret := LoadClientCredentialFromEnv()
+
+	// Verify the results.
+	if clientID != expectedClientID {
+		t.Errorf("Expected CLIENT_ID %s, got %s", expectedClientID, clientID)
+	}
+	if clientSecret != expectedClientSecret {
+		t.Errorf("Expected CLIENT_SECRET %s, got %s", expectedClientSecret, clientSecret)
 	}
 }
