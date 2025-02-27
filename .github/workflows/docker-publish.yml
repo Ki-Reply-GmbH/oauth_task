@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - devops/test-dockerpublish
+      - main
 
 jobs:
   build:
@@ -29,6 +29,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/ptksaha/oauth2-server:v0.1.1
+          tags: ghcr.io/ptksaha/oauth2-server:v0.1.2
       - name: Log out from GitHub Container Registry
         run: docker logout ghcr.io
