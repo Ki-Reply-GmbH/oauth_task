@@ -17,15 +17,15 @@ func TestExtractBasicAuthCredentials_Valid(t *testing.T) {
 	encoded := base64.StdEncoding.EncodeToString([]byte(credentials))
 	req.Header.Set("Authorization", "Basic "+encoded)
 
-	user, pass, ok := ExtractBasicAuthCredentials(req)
+	client, secret, ok := ExtractBasicAuthCredentials(req)
 	if !ok {
 		t.Error("Expected credentials extraction to succeed but it failed")
 	}
-	if user != "testuser" {
-		t.Errorf("Expected username 'testuser', got '%s'", user)
+	if client != "testid" {
+		t.Errorf("Expected clientId 'testid', got '%s'", client)
 	}
-	if pass != "testpassword" {
-		t.Errorf("Expected password 'testpassword', got '%s'", pass)
+	if secret != "testsecret" {
+		t.Errorf("Expected password 'testsecret', got '%s'", secret)
 	}
 }
 
@@ -90,16 +90,16 @@ func TestValidateBasicAuth_Valid(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-	credentials := "testuser:testpassword"
+	credentials := "testid:testsecret"
 	encoded := base64.StdEncoding.EncodeToString([]byte(credentials))
 	req.Header.Set("Authorization", "Basic "+encoded)
 
-	username, ok := ValidateBasicAuth(req)
+	clientId, ok := ValidateBasicAuth(req)
 	if !ok {
 		t.Error("Expected ValidateBasicAuth to return true for valid credentials, but it returned false")
 	}
-	if username != "testuser" {
-		t.Errorf("Expected returned username to be 'testuser', got '%s'", username)
+	if clientId != "testid" {
+		t.Errorf("Expected returned clientID to be 'testid', got '%s'", clientId)
 	}
 }
 
@@ -109,27 +109,27 @@ func TestValidateBasicAuth_InvalidPassword(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-	credentials := "testuser:wrongpassword"
+	credentials := "testid:wrongsecret"
 	encoded := base64.StdEncoding.EncodeToString([]byte(credentials))
 	req.Header.Set("Authorization", "Basic "+encoded)
 	_, ok := ValidateBasicAuth(req)
 	if ok {
-		t.Error("Expected ValidateBasicAuth to return false for wrong password, but it returned true")
+		t.Error("Expected ValidateBasicAuth to return false for wrong secret, but it returned true")
 	}
 }
 
-// check that ValidateBasicAuth returns false if the username is not found.
+// check that ValidateBasicAuth returns false if the clientId is not found.
 func TestValidateBasicAuth_InvalidUser(t *testing.T) {
 	req, err := http.NewRequest("GET", "/dummy", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-	credentials := "unknown:somepassword"
+	credentials := "unknown:somesecret"
 	encoded := base64.StdEncoding.EncodeToString([]byte(credentials))
 	req.Header.Set("Authorization", "Basic "+encoded)
 
 	_, ok := ValidateBasicAuth(req)
 	if ok {
-		t.Error("Expected ValidateBasicAuth to return false for unknown user, but it returned true")
+		t.Error("Expected ValidateBasicAuth to return false for unknown client, but it returned true")
 	}
 }

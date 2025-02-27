@@ -30,28 +30,28 @@ func ExtractBasicAuthCredentials(r *http.Request) (string, string, bool) {
 
 // checks if the provided credentials are valid.
 func ValidateBasicAuth(r *http.Request) (string, bool) {
-	providedUserName, providedUserPass, ok := ExtractBasicAuthCredentials(r)
+	providedclientID, providedClientSecret, ok := ExtractBasicAuthCredentials(r)
 	if !ok {
 		return "", false
 	}
 
-	expecteduserpassword, err := LookupClientSecret(providedUserName)
+	providedClientSecret, err := LookupClientSecret(providedclientID)
 	if err != nil {
 		return "", false
 	}
-	if providedUserPass != expecteduserpassword {
+	if providedClientSecret != providedClientSecret {
 		return "", false
 	}
 
-	return providedUserName, true
+	return providedclientID, true
 }
 
 // lookup in db for the password with provided username and return it.
-func LookupClientSecret(userName string) (string, error) {
-	// For demonstration, we assume that the client with "testuser" has the password "testpassword".
+func LookupClientSecret(clientID string) (string, error) {
+	// For demonstration, we assume that the client with "testid" has the password "testsecret".
 	// This would be a db operation but for now we just do hard coded check
-	if userName == "testuser" {
-		return "testpassword", nil
+	if clientID == "testid" {
+		return "testsecret", nil
 	}
 	return "", errors.New("client not found")
 }

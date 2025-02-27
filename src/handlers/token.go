@@ -29,7 +29,7 @@ type TokenResponse struct {
 // @Failure      500  {string}  string "Error generating token"
 // @Router       /token [get]
 func TokenHandler(w http.ResponseWriter, r *http.Request) {
-	userName, ok := auth.ValidateBasicAuth(r)
+	clientID, ok := auth.ValidateBasicAuth(r)
 	if !ok {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
@@ -41,7 +41,7 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 	claims := jwt.Claims{
 		StandardClaims: jwt.StandardClaims{
 			Issuer:    "oauth2-server",
-			Subject:   userName,
+			Subject:   clientID,
 			IssuedAt:  now,
 			ExpiresAt: exp,
 		},
