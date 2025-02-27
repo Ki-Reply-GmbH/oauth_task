@@ -29,7 +29,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}/oauth2-server:latest
-
+          tags: ghcr.io/ptksaha/oauth2-server:v0.1.1
       - name: Log out from GitHub Container Registry
         run: docker logout ghcr.io
