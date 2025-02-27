@@ -19,7 +19,7 @@ import (
 func KeysHandler(w http.ResponseWriter, r *http.Request) {
 	jwk, err := keys.GetJWK()
 	if err != nil {
-		Logger.Println("Error getting JWK: %v", err)
+		Logger.Printf("Error getting JWK: %v", err)
 		http.Error(w, "Error getting keys", http.StatusInternalServerError)
 		return
 	}
