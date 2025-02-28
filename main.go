@@ -15,6 +15,9 @@
 // @BasePath  /
 //
 // @securityDefinitions.basic BasicAuth
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 
 package main
 

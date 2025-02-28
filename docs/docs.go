@@ -50,8 +50,13 @@ const docTemplate = `{
                 }
             }
         },
-        "/introspection": {
+        "/introspect": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Validates a JWT token provided as a query parameter and returns its introspection result including active status and token claims.",
                 "produces": [
                     "application/json"
@@ -60,15 +65,6 @@ const docTemplate = `{
                     "introspection"
                 ],
                 "summary": "Introspect JWT Token",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "JWT token to introspect",
-                        "name": "token",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Token introspection result",
@@ -168,6 +164,11 @@ const docTemplate = `{
     "securityDefinitions": {
         "BasicAuth": {
             "type": "basic"
+        },
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

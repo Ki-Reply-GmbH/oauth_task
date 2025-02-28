@@ -23,10 +23,10 @@ type IntrospectionResponse struct {
 // @Description  Validates a JWT token provided as a query parameter and returns its introspection result including active status and token claims.
 // @Tags         introspection
 // @Produce      json
-// @Param        token   query     string  true  "JWT token to introspect"
 // @Success      200     {object}  handlers.IntrospectionResponse "Token introspection result"
 // @Failure      400     {string}  string "Missing token parameter"
-// @Router       /introspection [get]
+// @Router       /introspect [get]
+// @security     BearerAuth
 func IntrospectionHandler(w http.ResponseWriter, r *http.Request) {
 	authHeader := r.Header.Get("Authorization")
 	if authHeader == "" {

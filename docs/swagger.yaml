@@ -56,16 +56,10 @@ paths:
       summary: Retrieve Public Signing Keys
       tags:
       - keys
-  /introspection:
+  /introspect:
     get:
       description: Validates a JWT token provided as a query parameter and returns
         its introspection result including active status and token claims.
-      parameters:
-      - description: JWT token to introspect
-        in: query
-        name: token
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -77,6 +71,8 @@ paths:
           description: Missing token parameter
           schema:
             type: string
+      security:
+      - BearerAuth: []
       summary: Introspect JWT Token
       tags:
       - introspection
@@ -108,4 +104,8 @@ paths:
 securityDefinitions:
   BasicAuth:
     type: basic
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
