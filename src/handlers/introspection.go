@@ -6,6 +6,7 @@ import (
 	"oauth-basic/src/jwt"
 	"oauth-basic/src/keys"
 	. "oauth-basic/src/utils"
+	"strings"
 )
 
 type IntrospectionResponse struct {
@@ -27,10 +28,18 @@ type IntrospectionResponse struct {
 // @Failure      400     {string}  string "Missing token parameter"
 // @Router       /introspection [get]
 func IntrospectionHandler(w http.ResponseWriter, r *http.Request) {
-	tokenStr := r.URL.Query().Get("token")
-	if tokenStr == "" {
-		Logger.Println("Missing token parameter")
-		http.Error(w, "Missing token parameter", http.StatusBadRequest)
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		Logger.Println("Missing Authorization header")
+		http.Error(w, "Missing Authorization header", http.StatusBadRequest)
+		return
+	}
+
+	// Extract the token from the Authorization header
+	tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
+	if tokenStr == authHeader {
+		Logger.Println("Invalid Authorization header format")
+		http.Error(w, "Invalid Authorization header format", http.StatusBadRequest)
 		return
 	}
 
