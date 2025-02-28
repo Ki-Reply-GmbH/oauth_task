@@ -15,7 +15,7 @@ import (
 // @Produce      json
 // @Success      200  {object}  map[string]interface{}
 // @Failure      500  {string}  string "Error getting keys" or "Error encoding keys"
-// @Router       /keys [get]
+// @Router       /.well-known/jwks.json [get]
 func KeysHandler(w http.ResponseWriter, r *http.Request) {
 	jwk, err := keys.GetJWK()
 	if err != nil {

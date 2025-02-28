@@ -11,7 +11,7 @@
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 //
-// @host      localhost:30080
+// @host      localhost:8080
 // @BasePath  /
 //
 // @securityDefinitions.basic BasicAuth
@@ -48,7 +48,7 @@ func main() {
 	*/
 	mux := http.NewServeMux()
 	mux.HandleFunc("/token", handlers.TokenHandler)
-	mux.HandleFunc("/keys", handlers.KeysHandler)
+	mux.HandleFunc("/.well-known/jwks.json", handlers.KeysHandler)
 	mux.HandleFunc("/introspect", handlers.IntrospectionHandler)
 	mux.HandleFunc("/health", healthHandler)
 	mux.HandleFunc("/docs/", httpSwagger.WrapHandler)

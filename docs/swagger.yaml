@@ -24,7 +24,7 @@ definitions:
       token_type:
         type: string
     type: object
-host: localhost:30080
+host: localhost:8080
 info:
   contact:
     email: p.saha@reply.de
@@ -37,6 +37,25 @@ info:
   title: OAuth2 Server API
   version: "1.0"
 paths:
+  /.well-known/jwks.json:
+    get:
+      description: Returns the RSA public signing keys in JWK format, which can be
+        used to verify JWT signatures.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Error getting keys" or "Error encoding keys
+          schema:
+            type: string
+      summary: Retrieve Public Signing Keys
+      tags:
+      - keys
   /introspection:
     get:
       description: Validates a JWT token provided as a query parameter and returns
@@ -61,25 +80,6 @@ paths:
       summary: Introspect JWT Token
       tags:
       - introspection
-  /keys:
-    get:
-      description: Returns the RSA public signing keys in JWK format, which can be
-        used to verify JWT signatures.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Error getting keys" or "Error encoding keys
-          schema:
-            type: string
-      summary: Retrieve Public Signing Keys
-      tags:
-      - keys
   /token:
     get:
       consumes:

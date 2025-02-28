@@ -16,9 +16,14 @@ spec:
     spec:
       containers:
       - name: oauth2-server
-        image: ghcr.io/ptksaha/oauth2-server:v0.1.1
+        image: ghcr.io/ptksaha/oauth2-server:v0.1.2
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
+        env:
+        - name: CLIENT_ID
+          value: "testuser"
+        - name: CLIENT_SECRET
+          value: "testpassword"
       imagePullSecrets:
       - name: ghcr-secret-oauth
