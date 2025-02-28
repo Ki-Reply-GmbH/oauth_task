@@ -19,7 +19,8 @@ type TokenResponse struct {
 
 // TokenHandler godoc
 // @Summary      Generate JWT Token
-// @Description  Validates client credentials and returns a JWT token
+// @Description  Validates client credentials and returns a JWT token. Use Basic Auth with 'testuser' and 'testpassword' as credentials.
+// @Description  Use Basic Auth with 'testuser' and 'testpassword' as credentials.
 // @Tags         token
 // @Accept       json
 // @Produce      json

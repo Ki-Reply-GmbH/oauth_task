@@ -27,6 +27,7 @@ type IntrospectionResponse struct {
 // @Failure      400     {string}  string "Missing token parameter"
 // @Router       /introspect [get]
 // @security     BearerAuth
+// @Description  Usage: Make sure you have the token available from the token endpoint and then add authorization header provided in this call. Add it like Bearer <token string from token endpoint>
 func IntrospectionHandler(w http.ResponseWriter, r *http.Request) {
 	authHeader := r.Header.Get("Authorization")
 	if authHeader == "" {

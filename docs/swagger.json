@@ -51,7 +51,7 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Validates a JWT token provided as a query parameter and returns its introspection result including active status and token claims.",
+                "description": "Validates a JWT token provided as a query parameter and returns its introspection result including active status and token claims.\nUsage: Make sure you have the token available from the token endpoint and then add authorization header provided in this call. Add it like Bearer \u003ctoken string from token endpoint\u003e",
                 "produces": [
                     "application/json"
                 ],
@@ -82,7 +82,7 @@
                         "BasicAuth": []
                     }
                 ],
-                "description": "Validates client credentials and returns a JWT token",
+                "description": "Validates client credentials and returns a JWT token. Use Basic Auth with 'testuser' and 'testpassword' as credentials.\nUse Basic Auth with 'testuser' and 'testpassword' as credentials.",
                 "consumes": [
                     "application/json"
                 ],
