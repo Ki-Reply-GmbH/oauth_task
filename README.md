@@ -48,6 +48,7 @@ kubectl get pods
 Go to `http://localhost:8080/health` to check if the service is up.
 
 You can access the API documentation at `http://localhost:8080/docs`.
+the credential information and how to use the endpoints are described in the doc
 
 ## Develop the Application
 
