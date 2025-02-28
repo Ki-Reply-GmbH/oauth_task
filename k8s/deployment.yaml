@@ -25,5 +25,3 @@ spec:
           value: "testuser"
         - name: CLIENT_SECRET
           value: "testpassword"
-      imagePullSecrets:
-      - name: ghcr-secret-oauth
