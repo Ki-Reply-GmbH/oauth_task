@@ -23,6 +23,33 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/.well-known/jwks.json": {
+            "get": {
+                "description": "Returns the RSA public signing keys in JWK format, which can be used to verify JWT signatures.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "keys"
+                ],
+                "summary": "Retrieve Public Signing Keys",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Error getting keys\" or \"Error encoding keys",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/introspection": {
             "get": {
                 "description": "Validates a JWT token provided as a query parameter and returns its introspection result including active status and token claims.",
@@ -51,33 +78,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Missing token parameter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/keys": {
-            "get": {
-                "description": "Returns the RSA public signing keys in JWK format, which can be used to verify JWT signatures.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "keys"
-                ],
-                "summary": "Retrieve Public Signing Keys",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Error getting keys\" or \"Error encoding keys",
                         "schema": {
                             "type": "string"
                         }

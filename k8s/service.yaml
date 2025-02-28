@@ -11,4 +11,3 @@ spec:
   ports:
   - port: 80         # Service port
     targetPort: 8080 # Container port
-    nodePort: 30080  # Exposed port on your local machine
