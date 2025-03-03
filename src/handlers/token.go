@@ -31,6 +31,7 @@ type TokenResponse struct {
 // @Router       /token [get]
 func TokenHandler(w http.ResponseWriter, r *http.Request) {
 	clientID, ok := auth.ValidateBasicAuth(r)
+
 	if !ok {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return

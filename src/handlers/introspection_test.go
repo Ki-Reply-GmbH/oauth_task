@@ -26,7 +26,8 @@ func TestIntrospectionHandler_MissingToken(t *testing.T) {
 }
 
 func TestIntrospectionHandler_InvalidToken(t *testing.T) {
-	req, err := http.NewRequest("GET", "/introspect?token=invalidtoken", nil)
+	req, err := http.NewRequest("GET", "/introspect", nil)
+	req.Header.Set("Authorization", "Bearer Invalidtoken")
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
@@ -69,7 +70,8 @@ func TestIntrospectionHandler_ValidToken(t *testing.T) {
 	}
 
 	// Create a request with the valid token as query parameter.
-	req, err := http.NewRequest("GET", "/introspect?token="+tokenString, nil)
+	req, err := http.NewRequest("GET", "/introspect", nil)
+	req.Header.Set("Authorization", "Bearer "+tokenString)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
